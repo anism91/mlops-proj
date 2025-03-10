@@ -23,3 +23,5 @@ def load_data(file_path):
         raise ValueError(f"The file at {file_path} is empty or the format is incorrect.")
     except pd.errors.ParserError:
         raise ValueError(f"The file at {file_path} could not be parsed.")
+    except Exception as e:
+        raise ValueError(f"An error occurred while loading the file: {e}")
