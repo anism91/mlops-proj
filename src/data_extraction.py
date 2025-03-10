@@ -1,39 +1,25 @@
 import pandas as pd
 
-def load_reviews_data(file_path: str) -> pd.DataFrame:
+def load_data(file_path):
     """
-    Charge les avis des utilisateurs à partir d'un fichier CSV.
-    Gère les erreurs liées aux fichiers manquants ou mal formatés.
+    Load raw data from a CSV file.
     
-    :param file_path: Chemin du fichier CSV
-    :return: DataFrame contenant les avis des utilisateurs
+    Parameters:
+    file_path (str): The path to the CSV file.
+    
+    Returns:
+    pd.DataFrame: The loaded data.
+    
+    Raises:
+    FileNotFoundError: If the file does not exist.
+    ValueError: If the file format is incorrect.
     """
-    df = pd.read_csv(file_path)
-    
-    # Vérifier si les colonnes attendues sont présentes
-    expected_columns = {"reviewId", "userName", "content", "score", "at", "appId"}
-    if not expected_columns.issubset(df.columns):
-        raise ValueError("Le fichier ne contient pas toutes les colonnes attendues.")
-    
-    return df
-    
-def clean_reviews_data(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Nettoie les données en supprimant les valeurs manquantes et en formatant les colonnes.
-    
-    :param df: DataFrame brut
-    :return: DataFrame nettoyé
-    """
-    df = df.dropna(subset=["content", "score", "at"])
-    df["at"] = pd.to_datetime(df["at"], errors='coerce')
-    df = df.dropna(subset=["at"])  # Supprimer les dates invalides
-    return df
-
-if __name__ == "__main__":
-    file_path = "../data/dataset.csv"
-    print("1")
-    df = load_reviews_data(file_path)
-    print("2")
-    if not df.empty:
-        df = clean_reviews_data(df)
-        print(df.head())
+    try:
+        data = pd.read_csv(file_path)
+        return data
+    except FileNotFoundError:
+        raise FileNotFoundError(f"The file at {file_path} was not found.")
+    except pd.errors.EmptyDataError:
+        raise ValueError(f"The file at {file_path} is empty or the format is incorrect.")
+    except pd.errors.ParserError:
+        raise ValueError(f"The file at {file_path} could not be parsed.")
