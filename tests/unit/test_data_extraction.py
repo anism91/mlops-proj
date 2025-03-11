@@ -40,5 +40,4 @@ def test_load_data_incorrect_format(tmp_path):
     file_path.write_text('a,"b,c\nd,e')  # Unmatched quote will cause a ParserError
    
     with pytest.raises(ValueError, match="could not be parsed"):
-        load_data(file_path)
- 
+        load_data(file_path) 
